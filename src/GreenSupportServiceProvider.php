@@ -25,10 +25,10 @@ class GreenSupportServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         // アセットを登録
         FilamentAsset::register([
-            Css::make('green-support', __DIR__ . '/../../resources/css/green-support.css'),
+            Css::make('green-support', __DIR__ . '/../resources/css/green-support.css'),
         ], 'kobesoft/green-support');
 
         // 言語・ビューの登録
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'green');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'green');
     }
 }
