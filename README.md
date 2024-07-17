@@ -62,7 +62,7 @@ export default {
 選択肢の表示を変更する場合は、`TITLE`定数をオーバーライドしてください。
 
 ```php
-use Kobesoft\GreenCommon\Traits\HasGetOptions;
+use \Green\Support\Concerns\HasGetOptions;
 
 class Prefecture extends Model
 {
@@ -94,7 +94,7 @@ $prefectures = Prefecture::getOptions(function ($query) {
 並び順のカラムを変更する場合は、`SORT_ORDER`定数をオーバーライドしてください。
 
 ```php
-use Kobesoft\GreenCommon\Traits\HasSortOrder;
+use \Green\Support\Concerns\HasSortOrder;
 
 class Category extends Model
 {
@@ -118,7 +118,7 @@ NestedSetモデルの全ての選択肢を取得するメソッドを提供し�
 HasGetOptionsとの違いは、階層構造を持つモデルに対応している点です。
 getOptionsメソッドの引数の$htmlをtrueにすると、階層構造を表現したHTMLを返します。
 
-## FormComponent
+## フォームコンポーネント
 
 ### Splitter
 
@@ -127,14 +127,12 @@ getOptionsメソッドの引数の$htmlをtrueにすると、階層構造を表�
 <img src="docs/images/splitter/sample1.jpg">
 
 ```php
-use Kobesoft\GreenCommon\FormComponent\Splitter;
-
 public static function form(Form $form): Form
 {
     return $form
         ->schema([
             //:
-            \Green\Forms\Components\Splitter::make()
+            \Green\Support\Forms\Components\Splitter::make()
                 ->label('Splitter Label'),
             //:
         ])
@@ -142,3 +140,32 @@ public static function form(Form $form): Form
 }
 ```
 
+## ビューのカスタマイズ
+
+### StickyFormActions
+
+`StickyFormActions`は、フォームのアクションボタンを画面下部に固定するためのトレイトです。
+標準のareFormsActionsStickyと異なり、常に画面下部に表示されます。
+
+```php
+class EditManufacturer extends \Filament\Resources\Pages\EditRecord
+{
+    use \Green\Support\Concerns\StickyFormActions;
+}
+```
+
+## ExtraPageClass
+
+`ExtraPageClass`は、ページに追加のクラスを指定するためのアノテーションです。
+指定されたクラスのdivタグが、body配下に追加されます。
+
+```php
+class EditManufacturer extends \Filament\Resources\Pages\EditRecord
+{
+    #[ExtraPageClass]
+    public static function myExtraPageClass(): array
+    {
+        return ['my-extra-page-class'];
+    }
+}
+```

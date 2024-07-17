@@ -1,6 +1,6 @@
 <?php
 
-namespace Green\Forms\Components;
+namespace Green\Support\Forms\Components;
 
 use Closure;
 use Filament\Forms\Components\Component;
@@ -14,7 +14,7 @@ class Splitter extends Component
 {
     use HasLabel;
 
-    protected string $view = 'green::forms.components.splitter';
+    protected string $view = 'green-support::forms.components.splitter';
 
     protected bool|Closure $isDotted = false;
 

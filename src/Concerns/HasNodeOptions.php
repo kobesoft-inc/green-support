@@ -1,6 +1,6 @@
 <?php
 
-namespace Green\Concerns;
+namespace Green\Support\Concerns;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
