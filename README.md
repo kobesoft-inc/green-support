@@ -59,7 +59,7 @@ export default {
 プルダウン選択肢の項目として利用する場合に便利です。
 
 デフォルトで、idとnameのカラムを利用します。
-選択肢の表示を変更する場合は、`TITLE`定数をオーバーライドしてください。
+選択肢の表示を変更する場合は、`LABEL`定数をオーバーライドしてください。
 
 ```php
 use \Green\Support\Concerns\HasGetOptions;
@@ -68,7 +68,7 @@ class Prefecture extends Model
 {
     use HasGetOptions;
 
-    const TITLE = 'name_jp';
+    const LABEL = 'name_jp';
 }
 ```
 
@@ -198,7 +198,8 @@ class EditManufacturer extends \Filament\Resources\Pages\EditRecord
 ### TableAction
 
 `TableAction`は、モーダル内にテーブルを表示するためのLivewireコンポーネントです。
-クリックすると、モーダル内にテーブルが表示されます。
+
+<img src="docs/images/table-action/sample1.jpg">
 
 ```php
 class ListManufacturer extends \Filament\Resources\Pages\ListRecords
@@ -208,7 +209,8 @@ class ListManufacturer extends \Filament\Resources\Pages\ListRecords
         return [
             \Green\Support\Actions\TableAction::make('logs')
                 ->label('履歴')
-                ->modalTable(\App\Filament\Tables\ManufacturerLogTable::class),
+                ->modalTable(\App\Filament\Tables\ManufacturerLogTable::class)
+                ->modalTableOptions([]),
         ];
     }
 }

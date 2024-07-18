@@ -22,8 +22,8 @@ trait HasNodeOptions
         // IDのカラム
         $idColumn = (new static())->primaryKey;
 
-        // 選択肢のタイトルのカラム
-        $titleColumn = defined(static::class . '::TITLE') ? static::TITLE : 'name';
+        // 選択肢のラベルのカラム
+        $labelColumn = defined(static::class . '::LABEL') ? static::LABEL : 'name';
 
         // 選択肢を取得
         $query = static::query();
@@ -36,8 +36,8 @@ trait HasNodeOptions
             ->get()
             ->mapWithKeys(fn(Model $model) => [
                 $model->$idColumn => $html
-                    ? $model->$titleColumn
-                    : $model->getOptionLabel($titleColumn)
+                    ? $model->$labelColumn
+                    : $model->getOptionLabel($labelColumn)
             ])
             ->toArray();
     }

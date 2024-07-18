@@ -22,8 +22,8 @@ trait HasGetOptions
         // IDのカラム
         $idColumn = (new static())->primaryKey;
 
-        // 選択肢のタイトルのカラム
-        $titleColumn = defined(static::class . '::TITLE') ? static::TITLE : 'name';
+        // 選択肢のラベルのカラム
+        $labelColumn = defined(static::class . '::LABEL') ? static::LABEL : 'name';
 
         // 並び順のカラム
         if (method_exists(static::class, 'getSortOrder')) {
@@ -39,7 +39,7 @@ trait HasGetOptions
         }
         return $query
             ->orderBy($orderColumn)
-            ->pluck($titleColumn, $idColumn)
+            ->pluck($labelColumn, $idColumn)
             ->toArray();
     }
 }
