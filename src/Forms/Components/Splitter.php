@@ -5,7 +5,6 @@ namespace Green\Support\Forms\Components;
 use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Concerns\HasLabel;
-use Filament\Support\Concerns\HasExtraAttributes;
 
 /**
  * スプリッターコンポーネント

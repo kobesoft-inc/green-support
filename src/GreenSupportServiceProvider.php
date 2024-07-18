@@ -44,6 +44,12 @@ class GreenSupportServiceProvider extends \Illuminate\Support\ServiceProvider
             PanelsRenderHook::PAGE_END,
             fn(array $scopes) => '</div>',
         );
+
+        // Livewireコンポーネントの登録
+        \Livewire\Livewire::component(
+            \Green\Support\Livewire\TableAction::$name,
+            \Green\Support\Livewire\TableAction::class
+        );
     }
 
     /**
