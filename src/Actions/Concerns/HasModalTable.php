@@ -4,12 +4,12 @@ namespace Green\Support\Actions\Concerns;
 
 use Closure;
 use Exception;
-use Filament\Tables\Table;
 
 trait HasModalTable
 {
     protected string|Closure|null $modalTable = null;
     protected array|Closure|null $modalTableOptions = null;
+    protected ?string $modalModel = null;
 
     /**
      * モーダル内に表示するFilamentテーブルを定義するクラスを指定する
@@ -26,17 +26,17 @@ trait HasModalTable
     /**
      * モーダル内に表示するFilamentテーブルを定義するクラスを取得する
      *
-     * @return string モーダル内に表示するテーブルを定義するクラス
+     * @return string|null モーダル内に表示するテーブルを定義するクラス
      * @throws Exception
      */
-    public function getModalTable(): string
+    public function getModalTable(): ?string
     {
         $modalTable = $this->evaluate($this->modalTable);
         if ($modalTable === null) {
-            throw new Exception('Modal table is not defined');
+            return null;
         }
-        if (!class_implements($modalTable, \Green\Support\Contracts\HasTable::class)) {
-            throw new Exception('Modal table must implement \Green\Support\Contracts\HasTable');
+        if (!is_subclass_of($modalTable, \Green\Support\Tables\BaseTable::class)) {
+            throw new Exception('Modal table must implement Green\Support\Tables\BaseTable');
         }
         return $modalTable;
     }
@@ -61,5 +61,27 @@ trait HasModalTable
     public function getModalTableOptions(): array
     {
         return $this->evaluate($this->modalTableOptions) ?? [];
+    }
+
+    /**
+     * モーダル内に表示するモデルを指定する
+     *
+     * @param string $modalModel モーダル内に表示するモデル
+     * @return $this
+     */
+    public function modalModel(string $modalModel): static
+    {
+        $this->modalModel = $modalModel;
+        return $this;
+    }
+
+    /**
+     * モーダル内に表示するモデルを取得する
+     *
+     * @return string|null モーダル内に表示するモデル
+     */
+    public function getModalModel(): ?string
+    {
+        return $this->evaluate($this->modalModel);
     }
 }

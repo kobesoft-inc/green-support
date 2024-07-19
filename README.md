@@ -201,6 +201,8 @@ class EditManufacturer extends \Filament\Resources\Pages\EditRecord
 
 <img src="docs/images/table-action/sample1.jpg">
 
+テーブルクラスがデフォルトの振る舞いで十分な場合は、`modalModel`メソッドでモデルを指定します。
+
 ```php
 class ListManufacturer extends \Filament\Resources\Pages\ListRecords
 {
@@ -209,22 +211,66 @@ class ListManufacturer extends \Filament\Resources\Pages\ListRecords
         return [
             \Green\Support\Actions\TableAction::make('logs')
                 ->label('履歴')
+                // モーダルに表示するテーブルクラスを指定
+                ->modalModel(\Green\AdminAuth\Models\AdminLoginLog::class),
+        ];
+    }
+}
+```
+
+ViewTableクラスを派生させ、テーブルクラスを構築し、`modalTable`メソッドで指定することもできます。
+ViewTableクラスについては、後述します。
+
+```php
+class ListManufacturer extends \Filament\Resources\Pages\ListRecords
+{
+    protected function getHeaderActions(): array
+    {
+        return [
+            \Green\Support\Actions\TableAction::make('logs')
+                ->label('履歴')
+                // モーダルに表示するViewTableクラス
                 ->modalTable(\App\Filament\Tables\ManufacturerLogTable::class)
+                // テーブルクラスに渡すオプション
                 ->modalTableOptions([]),
         ];
     }
 }
+```
 
-class ManufacturerLogTable extends \Green\Support\Contracts\HasTable
+#### ViewTableのカスタマイズ
+
+`ViewTable`は、テーブルの表示をカスタマイズするためのクラスです。
+`ViewTable`を継承して、`make(カラム名)Column`メソッドを実装することで、カラムの表示をカスタマイズできます。
+
+```php
+class ManufacturerLogTable extends \Green\Support\Tables\ViewTable
 {
-    public static function table(Table $table, array $options): Table
+    // モデルクラスを指定します
+    protected ?string $model = \Green\AdminAuth\Models\AdminLoginLog::class;
+
+    // 表示するカラム名を指定します
+    // デフォルトで、モデルのfillableプロパティを利用します 
+    protected array $columns = [
+        'id',
+        'admin_id',
+        'created_at',
+    ];
+
+    // カラムの表示をカスタマイズします
+    public function makeCreatedAtColumn()
     {
-        return $table
-            ->query(\Green\AdminAuth\Models\ManufacturerLog::query())
-            ->columns([
-                TextColumn::make('id'),
-                TextColumn::make('name'),
-            ]);
+        return parent::makeCreatedAtColumn()->since();
     }
 }
 ```
+
+下記のルールに基づき、カラム名から自動的にカラムコンポーネントを生成しています。
+
+- _idで終わるカラム名: リレーション先のラベルを表示する`TextColumn`
+    - リレーションは、モデルのメソッドをリフレクションにより取得します。
+    - ラベルは、リレーション先のモデルのLABEL定数、または、nameカラムを利用します。
+- is_で始まるカラム名: `BooleanColumn`
+- imageを接頭辞・接尾辞に持つカラム名: `ImageColumn`
+- colorを接頭辞・接尾辞に持つカラム名: `ColorColumn`
+- fileで始まるカラム名: 表示しない

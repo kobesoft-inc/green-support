@@ -20,6 +20,7 @@ class TableAction extends LivewireAction
         $this->modalLivewireOptions(fn() => [
             'modalTable' => $this->getModalTable(),
             'modalTableOptions' => $this->getModalTableOptions(),
+            'modalModel' => $this->getModalModel(),
         ]);
     }
 }
