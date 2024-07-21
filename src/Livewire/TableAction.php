@@ -9,7 +9,9 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\View\View;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Random\RandomException;
 
 class TableAction extends Component implements HasForms, HasTable
 {
@@ -17,18 +19,21 @@ class TableAction extends Component implements HasForms, HasTable
     use InteractsWithForms;
 
     public static string $name = 'green.support.livewire.table-action';
+
+    #[Locked]
     public ?string $modalTable = null;
+    #[Locked]
     public array $modalTableOptions = [];
+    #[Locked]
     public ?string $modalModel = null;
 
     /**
-     * テーブルを定義する
+     * コンポーネントを初期化する
      *
-     * @param Table $table テーブル
-     * @return Table テーブル
+     * @return void
      * @throws Exception
      */
-    public function table(Table $table): Table
+    public function mount(): void
     {
         if ($this->modalTable === null && $this->modalModel === null) {
             // modalTableもmodalModelも指定されていない場合は例外を投げる
@@ -43,12 +48,23 @@ class TableAction extends Component implements HasForms, HasTable
             // modalTableが指定されていない場合は、デフォルトのViewTableにモデルを指定する
             $this->modalTable = \Green\Support\Tables\ViewTable::class;
         }
-        $modalTableInstance = new $this->modalTable();
+    }
+
+    /**
+     * テーブルを定義する
+     *
+     * @param Table $table テーブル
+     * @return Table テーブル
+     * @throws Exception
+     */
+    public function table(Table $table): Table
+    {
+        $modalTable = $this->modalTable::make();
         if ($this->modalModel !== null) {
             // モデルが指定されている場合は、モデルをセットする
-            $modalTableInstance->model($this->modalModel);
+            $modalTable->model($this->modalModel);
         }
-        return $modalTableInstance->table($table, $this->modalTableOptions);
+        return $modalTable->table($table, $this->modalTableOptions);
     }
 
     /**
